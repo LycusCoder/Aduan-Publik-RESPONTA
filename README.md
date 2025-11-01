@@ -139,11 +139,26 @@ Aduan (1) ----< (many) FotoAduan
 
 **System:** Laravel Sanctum (API Token Authentication)
 
+**Endpoints:**
+- `POST /api/v1/register` - Register with OTP
+- `POST /api/v1/verify-otp` - Verify OTP code
+- `POST /api/v1/resend-otp` - Resend OTP
+- `POST /api/v1/login` - Login with no_hp + password
+- `GET /api/v1/profile` - Get user profile (protected)
+- `PUT /api/v1/profile` - Update profile (protected)
+- `POST /api/v1/logout` - Logout (protected)
+
 **Login Method:**
 - ❌ NO email-based login
 - ✅ Login using `no_hp` (phone number) + `password`
-- ✅ OTP verification for registration
+- ✅ OTP verification via email (can be toggled on/off)
 - ✅ NIK (ID number) encrypted in database
+
+**OTP Toggle:**
+```env
+OTP_ENABLED=false  # For development (auto-verify)
+OTP_ENABLED=true   # For production (require OTP)
+```
 
 **Test Credentials:**
 ```
@@ -194,15 +209,22 @@ php artisan migrate:fresh --seed
   - Spatial queries for nearby aduan
   - 2 seeders (Users & Kategori)
 
+- [x] **Phase 2:** Authentication API ✅ **NEW!**
+  - Register with OTP verification (toggle on/off)
+  - Login via no_hp + password
+  - Email OTP system with beautiful template
+  - Profile management (get/update)
+  - 7 API endpoints ready
+  - Sanctum token authentication
+
 ### 🚧 In Progress
 
-- [ ] **Phase 2:** Authentication API (Register, Login, OTP)
 - [ ] **Phase 3:** Aduan CRUD API
 - [ ] **Phase 4:** File Upload & Image Processing
 - [ ] **Phase 5:** Admin Dashboard
 - [ ] **Phase 6:** Testing & Deployment
 
-**Progress:** 33% (2/6 phases completed)
+**Progress:** 50% (3/6 phases completed)
 
 **See full roadmap:** [`docs/DEVELOPMENT_ROADMAP.md`](docs/DEVELOPMENT_ROADMAP.md)
 

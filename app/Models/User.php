@@ -23,7 +23,12 @@ class User extends Authenticatable
         'name',
         'no_hp',
         'nik',
+        'email',
         'password',
+        'otp_code',
+        'otp_expires_at',
+        'is_verified',
+        'verified_at',
     ];
 
     /**
@@ -47,6 +52,9 @@ class User extends Authenticatable
         return [
             'password' => 'hashed',
             'nik' => 'encrypted', // Automatically encrypt/decrypt NIK
+            'is_verified' => 'boolean',
+            'otp_expires_at' => 'datetime',
+            'verified_at' => 'datetime',
         ];
     }
 

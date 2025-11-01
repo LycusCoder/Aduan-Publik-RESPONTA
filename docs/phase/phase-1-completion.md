@@ -14,7 +14,7 @@ Phase 1 telah diselesaikan dengan sempurna! Semua deliverables telah dibuat, dit
 
 ### ✅ Completed Deliverables
 
-#### 1. **Database Migrations** (5 migrations)
+#### 1. **Database Migrations** (4 migrations)
 - ✅ `2025_01_31_000001_update_users_table_add_responta_fields.php`
   - Menambahkan kolom `no_hp` (unique) dan `nik` (encrypted)
   - Menghapus kolom `email` (tidak digunakan)
@@ -35,8 +35,7 @@ Phase 1 telah diselesaikan dengan sempurna! Semua deliverables telah dibuat, dit
   - Support multiple photos per aduan (max 3)
   - Auto file size tracking
 
-- ✅ `2025_01_31_000005_create_personal_access_tokens_table.php`
-  - Laravel Sanctum untuk API authentication
+**Note:** Laravel Sanctum `personal_access_tokens` table dibuat otomatis dari vendor package
 
 #### 2. **Eloquent Models** (4 models)
 - ✅ **User Model** (`/app/app/Models/User.php`)
