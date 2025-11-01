@@ -1,16 +1,20 @@
 # 🗺️ Development Roadmap - RESPONTA
 
+**Last Updated:** 2025-11-01 (Phase 4 In Progress)
+
 ## Project Timeline Overview
 
 ```
 Phase 0: Dokumentasi & Setup        [DONE]    ████████████ 100%
 Phase 1: Database & Models          [DONE]    ████████████ 100%
 Phase 2: Authentication System      [DONE]    ████████████ 100%
-Phase 3: Aduan Management           [DONE]    ████████████ 100%
-Phase 4: Frontend Implementation    [NEXT]    ░░░░░░░░░░░░   0%
+Phase 3: Aduan CRUD API            [DONE]    ████████████ 100%
+Phase 4: Frontend React/TS         [75%]     █████████░░░  75%
 Phase 5: Testing & Refinement                 ░░░░░░░░░░░░   0%
 Phase 6: Deployment & Launch                  ░░░░░░░░░░░░   0%
 ```
+
+**Overall Progress: 62.5% (4.5/6 phases)**
 
 ---
 
@@ -251,178 +255,190 @@ Phase 6: Deployment & Launch                  ░░░░░░░░░░░�
 
 ---
 
-## 📋 Phase 4: Frontend Implementation
+## 🚧 Phase 4: Frontend Implementation (React + TypeScript)
 
-**Status:** 🔜 NEXT  
+**Status:** 🚧 IN PROGRESS (75% Complete)  
 **Duration:** 4-5 hari  
-**Priority:** HIGH
+**Priority:** HIGH  
+**Started:** 2025-11-01
 
 ### Goals
-Build complete frontend interface using Vue.js + Inertia.js + Tailwind CSS.
+Build complete frontend SPA using **React 19 + TypeScript + Vite + Tailwind CSS + Leaflet** untuk akses API yang reusable (support mobile app Flutter/Kotlin di masa depan).
 
-### Tasks
+### ✅ Completed Tasks
 
-#### 4.1 Setup
+#### 4.1 Setup & Configuration
+- [x] Install TypeScript & type definitions
+  - typescript, @types/react, @types/react-dom, @types/node, @types/leaflet
+- [x] Create tsconfig.json dengan strict mode
+- [x] Install React dependencies
+  - react@19, react-dom@19, react-router-dom@7, @tanstack/react-query@5
+- [x] Install UI dependencies
+  - axios, react-leaflet, leaflet
+- [x] Configure Vite untuk React + TypeScript
+- [x] Configure Tailwind CSS 4.0
+- [x] Setup path aliases (@/ → resources/js/)
 
-- [ ] Install dependencies
-  ```bash
-  npm install @inertiajs/vue3 vue@next
-  npm install leaflet
-  npm install -D tailwindcss@latest
-  ```
+#### 4.2 Type Definitions & Interfaces
+- [x] Create `/types/index.ts` dengan complete type definitions:
+  - User, KategoriAduan, Aduan, FotoAduan
+  - ApiResponse, PaginatedResponse, ApiError
+  - LoginCredentials, RegisterData, AuthResponse
+  - Location, CreateAduanFormData, AduanFilters
 
-- [ ] Configure Inertia.js
-  - Setup Inertia middleware
-  - Configure app.js
-  - Setup Ziggy for routes
-
-- [ ] Configure Tailwind CSS
-  - tailwind.config.js
-  - Include in app.css
-
-#### 4.2 Layout & Components
-
-- [ ] Create AppLayout.vue
-  - Header with logo
-  - Navigation menu
-  - User dropdown
-  - Mobile responsive
+#### 4.3 Core Services & Context
+- [x] API Service (`services/api.ts`)
+  - Axios instance dengan interceptors
+  - authService (register, login, logout, getProfile, updateProfile)
+  - kategoriService (getAll)
+  - aduanService (create, getList, getDetail, update, delete)
+  - Token management & 401 handling
   
-- [ ] Create GuestLayout.vue
+- [x] Auth Context (`contexts/AuthContext.tsx`)
+  - User state management
+  - Login/Register/Logout methods
+  - Protected route logic
+  - Auto-check authentication on mount
+
+- [x] Formatters utility (`utils/formatters.ts`)
+  - formatDate, formatPhoneNumber
+  - getStatusBadgeColor, getStatusLabel
+
+#### 4.4 Layout Components
+- [x] AppLayout.tsx
+  - Header with logo & navigation
+  - User dropdown menu
+  - Logout functionality
+  - Footer
+  - Responsive design
+  
+- [x] GuestLayout.tsx
   - Simple layout for auth pages
-  
-- [ ] Create reusable components:
-  - Button.vue
-  - Input.vue
-  - TextArea.vue
-  - Select.vue
-  - Card.vue
-  - Badge.vue
-  - Alert.vue
-  - Loading.vue
+  - Header & footer
+  - Centered content
 
-#### 4.3 Authentication Pages
+#### 4.5 UI Components (TypeScript)
+- [x] Button.tsx - with variants (primary, secondary, danger, outline)
+- [x] Input.tsx - with label, error, validation
+- [x] Alert.tsx - with types (success, error, warning, info)
+- [x] Badge.tsx - for status display
 
-- [ ] Register.vue
-  - Form with: name, no_hp, nik, password, password_confirmation
-  - Validation errors display
-  - Submit to POST /register
-  - Redirect to login on success
+#### 4.6 Authentication Pages
+- [x] Login.tsx
+  - Form dengan no_hp + password
+  - Error handling
+  - Auto-redirect setelah login
+  - TypeScript interfaces untuk form data & errors
   
-- [ ] Login.vue
-  - Form with: no_hp, password
-  - Remember me checkbox
-  - Submit to POST /login
-  - Store token in localStorage
-  - Redirect to dashboard
-  
-- [ ] Dashboard.vue
-  - Welcome message
-  - Quick stats (total aduan, status breakdown)
-  - Recent aduan list
-  - Button to create new aduan
+- [x] Register.tsx
+  - Form lengkap (name, no_hp, nik, email, password)
+  - Validation & error display
+  - Support OTP toggle (dari backend)
+  - TypeScript interfaces
 
-#### 4.4 Aduan Pages
+#### 4.7 Dashboard & Main Pages
+- [x] Dashboard.tsx
+  - Welcome message dengan user name
+  - Statistics cards (total, active, completed)
+  - Quick actions (Buat Aduan, Lihat Aduan)
+  - Recent aduan list dengan pagination
+  - TypeScript untuk API responses
 
-- [ ] CreateAduan.vue
-  - Kategori dropdown
-  - Deskripsi textarea with character counter
-  - Photo uploader component
-  - Map picker component
-  - Submit form
-  - Show success with ticket number
+- [x] DetailAduan.tsx
+  - Full aduan information
+  - Photo gallery dengan lightbox
+  - Location info + Google Maps link
+  - Edit/Delete buttons (hanya untuk status='baru')
+  - Admin notes display
+  - TypeScript untuk params & data
+
+#### 4.8 Map Component
+- [x] MapPicker.tsx
+  - Leaflet.js integration
+  - Current location detection
+  - Draggable marker
+  - Click to place marker
+  - Reverse geocoding (Nominatim API)
+  - TypeScript interfaces untuk location
+
+### 🔄 In Progress / Remaining Tasks
+
+#### 4.9 Aduan Management Pages
+- [ ] **CreateAduan.tsx** (70% done - need to migrate from .jsx to .tsx)
+  - Kategori selection dengan radio buttons
+  - Deskripsi textarea dengan character counter
+  - MapPicker integration
+  - Photo uploader (max 3 photos, preview, remove)
+  - Form validation
+  - Submit dengan FormData
   
-- [ ] ListAduan.vue
-  - List all user's aduan
-  - Filter by status
+- [ ] **ListAduan.tsx** (70% done - need to migrate from .jsx to .tsx)
+  - List semua aduan user
+  - Filter by status & kategori
   - Pagination
-  - Search by ticket number
-  - Click to view detail
+  - Search/filter functionality
+  - Click to detail
+
+#### 4.10 Integration & Testing
+- [ ] Update Laravel blade view untuk mount React app
+  - Modify `resources/views/welcome.blade.php` atau create `app.blade.php`
+  - Add Vite directives untuk load React
   
-- [ ] DetailAduan.vue
-  - Show all aduan info
-  - Photo gallery with lightbox
-  - Map with marker
-  - Status badge
-  - Timeline (Phase 2)
-  - Back button
+- [ ] Test complete user flow:
+  - Register → Login → Dashboard
+  - Create Aduan dengan foto & lokasi
+  - View List Aduan dengan filter
+  - View Detail Aduan
+  - Edit/Delete Aduan (status=baru)
+  - Logout
 
-#### 4.5 Special Components
+- [ ] Mobile responsive testing
+- [ ] Browser compatibility (Chrome, Firefox, Safari)
 
-- [ ] MapPicker.vue
-  ```vue
-  - Initialize Leaflet map
-  - Get user's current location
-  - Add draggable marker
-  - Emit coordinates on change
-  - Reverse geocoding
-  - Show address below map
-  ```
+### 📊 Progress Breakdown
 
-- [ ] PhotoUploader.vue
-  ```vue
-  - Multiple file input
-  - Drag & drop support
-  - Preview uploaded photos
-  - Remove photo button
-  - Validation (max 3, max 2MB each)
-  - Emit files array
-  ```
+| Component | Status | Progress |
+|-----------|--------|----------|
+| TypeScript Setup | ✅ Complete | 100% |
+| Type Definitions | ✅ Complete | 100% |
+| API Services | ✅ Complete | 100% |
+| Auth Context | ✅ Complete | 100% |
+| Layout Components | ✅ Complete | 100% |
+| UI Components | ✅ Complete | 100% |
+| Auth Pages | ✅ Complete | 100% |
+| Dashboard | ✅ Complete | 100% |
+| DetailAduan | ✅ Complete | 100% |
+| MapPicker | ✅ Complete | 100% |
+| CreateAduan | 🔄 70% | Migrate to .tsx |
+| ListAduan | 🔄 70% | Migrate to .tsx |
+| Blade Integration | ⏳ Pending | 0% |
+| Testing | ⏳ Pending | 0% |
 
-- [ ] StatusBadge.vue
-  ```vue
-  - Display status with color
-  - Props: status
-  - Color mapping for each status
-  ```
-
-#### 4.6 API Integration
-
-- [ ] Create api.js service
-  ```javascript
-  - axios instance with base URL
-  - Set Authorization header with token
-  - Handle 401 errors (redirect to login)
-  - Request/response interceptors
-  ```
-
-- [ ] API methods:
-  - auth.register()
-  - auth.login()
-  - auth.logout()
-  - auth.getUser()
-  - aduan.create()
-  - aduan.getList()
-  - aduan.getDetail()
-  - kategori.getAll()
-
-#### 4.7 State Management (Optional)
-
-- [ ] Use Pinia for global state
-  - User store
-  - Aduan store
-  - UI store (loading, errors)
-
-#### 4.8 Testing
-
-- [ ] Component tests (Vitest)
-  - Test form validation
-  - Test photo upload
-  - Test map interaction
-  
-- [ ] E2E tests (Playwright/Cypress)
-  - Complete user journey
-  - Photo upload flow
-  - Form submission
+**Phase 4 Overall: 75% Complete**
 
 ### Success Criteria
-- ✅ All auth pages work correctly
-- ✅ Users can create aduan with photos and location
-- ✅ Map picker works smoothly
-- ✅ Photo upload with preview works
-- ✅ List and detail pages display correctly
-- ✅ Mobile responsive
-- ✅ All frontend tests pass
+- [x] TypeScript strict mode enabled
+- [x] All type definitions created
+- [x] Auth pages work correctly
+- [x] Dashboard displays stats & recent aduan
+- [x] Map picker with geolocation works
+- [ ] Users can create aduan dengan foto & lokasi ⏳
+- [ ] List aduan dengan filter & pagination ⏳
+- [ ] Detail aduan display correctly ✅
+- [ ] Mobile responsive ⏳
+- [ ] All flows tested ⏳
+
+### Tech Stack Actual
+- **Frontend:** React 19.2 + TypeScript 5.9
+- **Build Tool:** Vite 7.1
+- **Routing:** React Router 7.9
+- **State Management:** React Query (TanStack Query) 5.90
+- **Styling:** Tailwind CSS 4.1
+- **Map:** Leaflet 1.9 + React Leaflet 5.0
+- **HTTP Client:** Axios 1.13
+- **Type Safety:** Full TypeScript dengan strict mode
+
+**See detailed implementation:** Phase 4 In Progress
 
 ---
 
