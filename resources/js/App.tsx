@@ -38,6 +38,7 @@ const ProtectedRoute = ({ children }: { children: ReactNode }) => {
         );
     }
 
+    // Jika tidak login, arahkan ke /login.
     return user ? <>{children}</> : <Navigate to="/login" replace />;
 };
 
@@ -56,6 +57,7 @@ const GuestRoute = ({ children }: { children: ReactNode }) => {
         );
     }
 
+    // Jika sudah login, arahkan ke /dashboard.
     return user ? <Navigate to="/dashboard" replace /> : <>{children}</>;
 };
 
@@ -74,6 +76,7 @@ const AdminProtectedRoute = ({ children }: { children: ReactNode }) => {
         );
     }
 
+    // Jika tidak login, arahkan ke /admin/login.
     return user ? <>{children}</> : <Navigate to="/admin/login" replace />;
 };
 
@@ -92,16 +95,20 @@ const AdminGuestRoute = ({ children }: { children: ReactNode }) => {
         );
     }
 
+    // Jika sudah login, arahkan ke /admin/dashboard.
     return user ? <Navigate to="/admin/dashboard" replace /> : <>{children}</>;
 };
 
 function App() {
     return (
-        <>
-            {/* Warga Routes */}
-            <AuthProvider>
+        // Membungkus semua Route dengan AuthProvider dan AdminAuthProvider 
+        // agar semua route di bawahnya bisa mengakses context
+        <AuthProvider>
+            <AdminAuthProvider>
                 <Routes>
-                    {/* Guest Routes */}
+                    {/* --- ROUTE WARGA (Public & Protected) --- */}
+                    
+                    {/* Guest Routes (Tidak butuh login) */}
                     <Route path="/login" element={
                         <GuestRoute>
                             <GuestLayout>
@@ -117,7 +124,7 @@ function App() {
                         </GuestRoute>
                     } />
 
-                    {/* Protected Routes */}
+                    {/* Protected Routes (Butuh login warga) */}
                     <Route path="/dashboard" element={
                         <ProtectedRoute>
                             <AppLayout>
@@ -147,22 +154,20 @@ function App() {
                         </ProtectedRoute>
                     } />
 
-                    {/* Default redirect */}
+                    {/* Default redirect untuk root path */}
                     <Route path="/" element={<Navigate to="/dashboard" replace />} />
-                </Routes>
-            </AuthProvider>
 
-            {/* Admin Routes */}
-            <AdminAuthProvider>
-                <Routes>
-                    {/* Admin Guest Routes */}
+
+                    {/* --- ROUTE ADMIN (Public & Protected) --- */}
+                    
+                    {/* Admin Guest Routes (Tidak butuh login admin) */}
                     <Route path="/admin/login" element={
                         <AdminGuestRoute>
                             <AdminLogin />
                         </AdminGuestRoute>
                     } />
 
-                    {/* Admin Protected Routes */}
+                    {/* Admin Protected Routes (Butuh login admin) */}
                     <Route path="/admin/dashboard" element={
                         <AdminProtectedRoute>
                             <AdminLayout>
@@ -217,24 +222,22 @@ function App() {
                         </AdminProtectedRoute>
                     } />
 
-                    {/* Admin Error Routes */}
-                    <Route path="/admin/403" element={<Forbidden />} />
-                    <Route path="/admin/500" element={<ServerError />} />
-                    <Route path="/admin/*" element={<NotFound />} />
-
-                    {/* Admin Redirect */}
+                    {/* Redirect Admin */}
                     <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
+                    
+                    {/* --- ROUTE ERROR (Global) --- */}
+                    
+                    {/* Error spesifik */}
+                    <Route path="/403" element={<Forbidden />} />
+                    <Route path="/500" element={<ServerError />} />
+                    <Route path="/maintenance" element={<Maintenance />} />
+                    
+                    {/* Catch-all Not Found Route (HARUS PALING AKHIR) */}
+                    {/* Menangkap semua path yang tidak cocok dengan route di atasnya */}
+                    <Route path="*" element={<NotFound />} />
                 </Routes>
             </AdminAuthProvider>
-
-            {/* Global Error Routes (outside providers) */}
-            <Routes>
-                <Route path="/403" element={<Forbidden />} />
-                <Route path="/500" element={<ServerError />} />
-                <Route path="/maintenance" element={<Maintenance />} />
-                <Route path="*" element={<NotFound />} />
-            </Routes>
-        </>
+        </AuthProvider>
     );
 }
 

@@ -19,13 +19,76 @@
         }
     }
     
+    /* Modern auth page animations */
+    @keyframes fade-in {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+    
+    @keyframes slide-down {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @keyframes slide-right {
+        from {
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+    
+    @keyframes slide-left {
+        from {
+            opacity: 0;
+            transform: translateX(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+    
     --animate-bounce-slow: bounce-slow 3s ease-in-out infinite;
+    --animate-fade-in: fade-in 0.5s ease-out;
+    --animate-slide-down: slide-down 0.3s ease-out;
+    --animate-slide-right: slide-right 0.4s ease-out;
+    --animate-slide-left: slide-left 0.4s ease-out;
 }
 
 /* Custom utility classes */
 @layer utilities {
     .animate-bounce-slow {
         animation: var(--animate-bounce-slow);
+    }
+    
+    .animate-fade-in {
+        animation: var(--animate-fade-in);
+    }
+    
+    .animate-slide-down {
+        animation: var(--animate-slide-down);
+    }
+    
+    .animate-slide-right {
+        animation: var(--animate-slide-right);
+    }
+    
+    .animate-slide-left {
+        animation: var(--animate-slide-left);
     }
 }
 
