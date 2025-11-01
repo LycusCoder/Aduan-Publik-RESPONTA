@@ -9,6 +9,9 @@ import ListAduan from './pages/aduan/ListAduan';
 import DetailAduan from './pages/aduan/DetailAduan';
 import AdminLogin from './pages/admin/AdminLogin';
 import AdminDashboard from './pages/admin/AdminDashboard';
+import AdminAduanList from './pages/admin/AdminAduanList';
+import AdminAduanDetail from './pages/admin/AdminAduanDetail';
+import AdminUserList from './pages/admin/AdminUserList';
 import AppLayout from './components/layout/AppLayout';
 import GuestLayout from './components/layout/GuestLayout';
 import AdminLayout from './components/admin/AdminLayout';
@@ -158,6 +161,31 @@ function App() {
                         <AdminProtectedRoute>
                             <AdminLayout>
                                 <AdminDashboard />
+                            </AdminLayout>
+                        </AdminProtectedRoute>
+                    } />
+
+                    {/* Admin Aduan Routes */}
+                    <Route path="/admin/aduan" element={
+                        <AdminProtectedRoute>
+                            <AdminLayout>
+                                <AdminAduanList />
+                            </AdminLayout>
+                        </AdminProtectedRoute>
+                    } />
+                    <Route path="/admin/aduan/:id" element={
+                        <AdminProtectedRoute>
+                            <AdminLayout>
+                                <AdminAduanDetail />
+                            </AdminLayout>
+                        </AdminProtectedRoute>
+                    } />
+
+                    {/* Admin User Routes */}
+                    <Route path="/admin/users" element={
+                        <AdminProtectedRoute>
+                            <AdminLayout>
+                                <AdminUserList />
                             </AdminLayout>
                         </AdminProtectedRoute>
                     } />
