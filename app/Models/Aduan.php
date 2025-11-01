@@ -28,13 +28,23 @@ class Aduan extends Model
         'nomor_tiket',
         'user_id',
         'kategori_aduan_id',
+        'dinas_id',
+        'assigned_to',
+        'verifikator_id',
+        'organization_id',
         'deskripsi',
         'latitude',
         'longitude',
         'alamat',
         'status',
-        'catatan_admin',
+        'priority',
+        'progress',
         'tanggal_selesai',
+        'tanggal_verifikasi',
+        'tanggal_diproses',
+        'catatan_admin',
+        'catatan_penolakan',
+        'catatan_verifikasi',
     ];
 
     /**
@@ -47,7 +57,10 @@ class Aduan extends Model
         return [
             'latitude' => 'decimal:8',
             'longitude' => 'decimal:8',
+            'progress' => 'integer',
             'tanggal_selesai' => 'datetime',
+            'tanggal_verifikasi' => 'datetime',
+            'tanggal_diproses' => 'datetime',
         ];
     }
 
@@ -67,8 +80,16 @@ class Aduan extends Model
 
         // Set tanggal_selesai when status changed to 'selesai'
         static::updating(function ($aduan) {
-            if ($aduan->isDirty('status') && $aduan->status === 'selesai' && empty($aduan->tanggal_selesai)) {
-                $aduan->tanggal_selesai = now();
+            if ($aduan->isDirty('status')) {
+                if ($aduan->status === 'selesai' && empty($aduan->tanggal_selesai)) {
+                    $aduan->tanggal_selesai = now();
+                }
+                if ($aduan->status === 'diverifikasi' && empty($aduan->tanggal_verifikasi)) {
+                    $aduan->tanggal_verifikasi = now();
+                }
+                if ($aduan->status === 'diproses' && empty($aduan->tanggal_diproses)) {
+                    $aduan->tanggal_diproses = now();
+                }
             }
         });
     }
@@ -120,6 +141,46 @@ class Aduan extends Model
     public function fotos(): HasMany
     {
         return $this->hasMany(FotoAduan::class)->orderBy('urutan');
+    }
+
+    /**
+     * Get the dinas assigned to handle this aduan.
+     */
+    public function dinas(): BelongsTo
+    {
+        return $this->belongsTo(Dinas::class);
+    }
+
+    /**
+     * Get the user assigned to handle this aduan.
+     */
+    public function assignedUser(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'assigned_to');
+    }
+
+    /**
+     * Get the verifikator who verified this aduan.
+     */
+    public function verifikator(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'verifikator_id');
+    }
+
+    /**
+     * Get the organization (kelurahan) of this aduan.
+     */
+    public function organization(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class);
+    }
+
+    /**
+     * Get all history logs for this aduan.
+     */
+    public function history(): HasMany
+    {
+        return $this->hasMany(AduanHistory::class)->orderBy('created_at', 'desc');
     }
 
     /**
