@@ -1,7 +1,7 @@
 # 🌟 GOLDEN RULES - RESPONTA Project
 
 **Last Updated:** 2025-01-31  
-**Version:** 1.0.0  
+**Version:** 2.0.0  
 **Project:** RESPONTA - Sistem Pelaporan Aduan Warga
 
 ---
@@ -14,7 +14,12 @@
 - **Backend:** Laravel 12 (PHP 8.2+)
 - **Database:** MariaDB 10.11+ / MySQL 8.0+
 - **Authentication:** Laravel Sanctum (API Token)
-- **Frontend:** (To be determined - React/Vue/Inertia)
+- **Frontend:** React 19 + TypeScript 5.9
+- **Build Tool:** Vite 7.1
+- **Styling:** Tailwind CSS 4.1
+- **State Management:** React Query 5.90
+- **Routing:** React Router 7.9
+- **Maps:** Leaflet.js 1.9
 - **ORM:** Eloquent
 - **Validation:** Laravel Form Requests
 
@@ -22,7 +27,23 @@
 
 ## 🚀 Quick Start for New Conversations
 
-### 1. Environment Requirements
+### 1. Instant Start (Recommended)
+
+```bash
+# One command to verify & start everything!
+bash scripts/start-app.sh
+```
+
+This script will:
+- ✓ Check all system requirements
+- ✓ Verify database connection
+- ✓ Install missing dependencies
+- ✓ Build frontend assets
+- ✓ Start Laravel server
+
+**Access:** http://localhost:8000
+
+### 2. Manual Setup (If Needed)
 
 ```bash
 # Check if PHP and Composer already installed
@@ -48,13 +69,14 @@ mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('');"
 mysql -u root -e "FLUSH PRIVILEGES;"
 ```
 
-### 2. Project Setup
+### 3. Project Setup
 
 ```bash
 cd /app
 
 # Install dependencies (if not already)
 composer install --no-interaction
+yarn install
 
 # Copy .env if not exists
 cp .env.example .env
@@ -72,17 +94,18 @@ php artisan key:generate
 
 # Create database (adjust username if needed)
 mysql -u root -e "CREATE DATABASE IF NOT EXISTS responta;"
-# OR with password:
-# mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS responta;"
 
 # Run migrations
 php artisan migrate --force
 
 # Seed database
 php artisan db:seed --force
+
+# Build frontend
+yarn build
 ```
 
-### 3. Verify Installation
+### 4. Verify Installation
 
 ```bash
 # Run automatic verification (reads credentials from .env)
@@ -132,10 +155,38 @@ bash scripts/verify-setup.sh
 │   ├── seeders/             # Database seeders
 │   └── factories/           # Model factories
 ├── routes/
-│   ├── api.php              # API routes (use this!)
-│   └── web.php
+│   ├── api.php              # API routes (backend)
+│   └── web.php              # SPA catch-all route
+├── resources/
+│   ├── js/                  # React + TypeScript frontend
+│   │   ├── app.tsx          # Entry point (mount React)
+│   │   ├── App.tsx          # Main component (routing)
+│   │   ├── types/           # TypeScript type definitions
+│   │   ├── services/        # API service layer
+│   │   ├── contexts/        # React contexts (AuthContext)
+│   │   ├── utils/           # Utility functions
+│   │   ├── components/      # Reusable components
+│   │   │   ├── layout/      # AppLayout, GuestLayout
+│   │   │   ├── ui/          # Button, Input, Alert, Badge
+│   │   │   └── map/         # MapPicker (Leaflet)
+│   │   └── pages/           # Application pages
+│   │       ├── auth/        # Login, Register
+│   │       ├── Dashboard.tsx
+│   │       └── aduan/       # CreateAduan, ListAduan, DetailAduan
+│   ├── views/
+│   │   └── app.blade.php    # React mount point
+│   └── css/
+│       └── app.css          # Tailwind CSS
+├── scripts/
+│   ├── start-app.sh         # 🚀 One-command startup
+│   ├── verify-setup.sh      # Verify installation
+│   └── test-api.sh          # Test API endpoints
 ├── docs/
 │   ├── phase/               # Phase completion reports
+│   │   ├── phase-1-completion.md
+│   │   ├── phase-2-completion.md
+│   │   ├── phase-3-completion.md
+│   │   └── phase-4-completion.md
 │   ├── golden-rules.md      # This file
 │   ├── API_DOCUMENTATION.md
 │   ├── DATABASE_SCHEMA.md
@@ -144,6 +195,17 @@ bash scripts/verify-setup.sh
 ├── README.md                # Main project README
 └── README_RESPONTA.md       # Original project overview
 ```
+
+### 🔍 Important File Distinction
+
+**Frontend Entry Points:**
+- `resources/js/app.tsx` (lowercase) = **Entry point** - mounts React app ke DOM
+- `resources/js/App.tsx` (PascalCase) = **Main component** - contains routing & app structure
+
+**Why two files?**
+- `app.tsx`: Handles ReactDOM.render, providers setup (QueryClient, BrowserRouter)
+- `App.tsx`: Contains actual application logic, routes, and components
+- This is standard React + Vite pattern - both are required!
 
 ---
 
@@ -190,12 +252,16 @@ Aduan (1) ----< (many) FotoAduan
 - Login using `no_hp` (NOT email)
 - NIK is encrypted in database
 - Tokens stored in `personal_access_tokens` table
+- Frontend stores token in localStorage
+- AuthContext manages global auth state
 
 ---
 
 ## 📝 Coding Standards
 
-### Models
+### Backend (Laravel)
+
+#### Models
 
 ```php
 // Always use fillable (NOT guarded)
@@ -215,7 +281,7 @@ public function aduan(): HasMany {
 }
 ```
 
-### Controllers
+#### Controllers
 
 ```php
 // Use Form Requests for validation
@@ -231,7 +297,7 @@ return response()->json([
 ], 201);
 ```
 
-### API Routes
+#### API Routes
 
 ```php
 // Use route groups
@@ -245,6 +311,64 @@ Route::prefix('v1')->group(function () {
         Route::get('/profile', [ProfileController::class, 'show']);
     });
 });
+```
+
+### Frontend (React + TypeScript)
+
+#### TypeScript Types
+
+```typescript
+// Define interfaces in types/index.ts
+export interface User {
+    id: number;
+    name: string;
+    no_hp: string;
+    // ... other fields
+}
+
+// Use types in components
+interface DashboardProps {
+    user: User;
+}
+
+const Dashboard: React.FC<DashboardProps> = ({ user }) => {
+    // Component logic
+};
+```
+
+#### API Calls
+
+```typescript
+// Use services/api.ts
+import { authService, aduanService } from '@/services/api';
+
+// In component
+const { data, isLoading } = useQuery({
+    queryKey: ['aduan', id],
+    queryFn: () => aduanService.getById(id)
+});
+```
+
+#### Components
+
+```typescript
+// Use proper typing
+import React, { ChangeEvent } from 'react';
+
+interface InputProps {
+    value: string;
+    onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+    label: string;
+}
+
+const Input: React.FC<InputProps> = ({ value, onChange, label }) => {
+    return (
+        <div>
+            <label>{label}</label>
+            <input value={value} onChange={onChange} />
+        </div>
+    );
+};
 ```
 
 ---
@@ -279,6 +403,22 @@ No HP: 081234567890
 Password: password123
 ```
 
+### Test API with cURL
+
+```bash
+# Login
+curl -X POST http://localhost:8000/api/v1/login \
+  -H "Content-Type: application/json" \
+  -d '{"no_hp":"081234567890","password":"password123"}'
+
+# Get categories
+curl http://localhost:8000/api/v1/kategori-aduan
+
+# Get aduan (with auth)
+curl http://localhost:8000/api/v1/aduan \
+  -H "Authorization: Bearer YOUR_TOKEN_HERE"
+```
+
 ---
 
 ## 🔧 Common Artisan Commands
@@ -306,6 +446,22 @@ php artisan serve                # Start dev server (localhost:8000)
 php artisan tinker               # Interactive REPL
 ```
 
+### Frontend Commands
+
+```bash
+# Development (hot reload)
+yarn dev
+
+# Production build
+yarn build
+
+# Type checking
+yarn tsc
+
+# Install package
+yarn add package-name
+```
+
 ---
 
 ## 🚨 Important Rules
@@ -322,6 +478,11 @@ php artisan tinker               # Interactive REPL
 8. **Add indexes** on foreign keys and search fields
 9. **Validate NIK format** (16 digits)
 10. **Validate no_hp format** (08xxxxxxxxxx)
+11. **Use TypeScript strict mode** in frontend
+12. **Define types** for all API responses
+13. **Use React Query** for data fetching
+14. **Use Tailwind CSS** for styling
+15. **Use script `start-app.sh`** for easy startup
 
 ### DON'Ts ❌
 
@@ -335,6 +496,10 @@ php artisan tinker               # Interactive REPL
 8. **Never use `SELECT *`** when you need specific columns
 9. **Never forget to add `api` middleware** to protected routes
 10. **Never use `id` as public identifier** (use `nomor_tiket` instead)
+11. **Never use `any` type** in TypeScript
+12. **Never ignore TypeScript errors**
+13. **Never hardcode API URLs** (use environment variables)
+14. **Never delete `app.tsx` or `App.tsx`** (both are needed!)
 
 ---
 
@@ -354,6 +519,8 @@ DB_PASSWORD=
 ## 🔄 Development Workflow
 
 ### For New Features
+
+#### Backend
 
 1. **Create Migration**
    ```bash
@@ -381,28 +548,67 @@ DB_PASSWORD=
 
 7. **Document API** in `docs/API_DOCUMENTATION.md`
 
+#### Frontend
+
+1. **Define Types** in `resources/js/types/index.ts`
+
+2. **Create API Service** in `resources/js/services/api.ts`
+
+3. **Create Component** in appropriate folder:
+   - Page: `resources/js/pages/`
+   - Layout: `resources/js/components/layout/`
+   - UI: `resources/js/components/ui/`
+
+4. **Add Route** in `resources/js/App.tsx`
+
+5. **Test in Browser**
+
 ---
 
 ## 📋 Current Phase Status
 
 ### ✅ Completed Phases
 
-- **Phase 0:** Documentation & Setup ✅
-- **Phase 1:** Database & Models ✅
-  - Migrations created (5 files)
-  - Models created (User, KategoriAduan, Aduan, FotoAduan)
-  - Seeders created (KategoriAduan, User)
-  - All tested and working
+- **Phase 1:** Database & Models ✅ (100%)
+  - 5 migrations created
+  - 4 models (User, KategoriAduan, Aduan, FotoAduan)
+  - Seeders for test data
+  
+- **Phase 2:** Authentication API ✅ (100%)
+  - Register, Login, Logout
+  - OTP verification
+  - Profile management
+  
+- **Phase 3:** Aduan CRUD API ✅ (100%)
+  - Create, Read, Update, Delete aduan
+  - Photo upload & compression
+  - Filter, pagination, search
+  
+- **Phase 4:** Frontend Implementation ✅ (100%)
+  - React + TypeScript setup
+  - Authentication pages (Login, Register)
+  - Dashboard with statistics
+  - Aduan management (List, Create, Detail)
+  - Interactive map (Leaflet.js)
+  - Photo upload with preview
 
 ### 🚧 Upcoming Phases
 
-- **Phase 2:** Authentication API (Register, Login, OTP)
-- **Phase 3:** Aduan CRUD API
-- **Phase 4:** File Upload (Photos)
-- **Phase 5:** Admin Panel
+- **Phase 5:** Admin Panel (Optional)
+  - Admin authentication
+  - User management
+  - Kategori management
+  - Aduan status updates
+  - Admin notes
+  
 - **Phase 6:** Testing & Deployment
+  - Unit tests
+  - Integration tests
+  - Server setup
+  - SSL configuration
+  - Performance optimization
 
-**Progress:** 2/6 phases (33.33%)
+**Progress:** 4/6 phases (66.67%)
 
 See `docs/DEVELOPMENT_ROADMAP.md` for full timeline.
 
@@ -443,6 +649,25 @@ php artisan config:clear
 php artisan cache:clear
 ```
 
+### Frontend Build Error
+
+```bash
+# Clear node_modules and rebuild
+rm -rf node_modules
+yarn install
+yarn build
+```
+
+### Port Already in Use
+
+```bash
+# Kill process on port 8000
+lsof -ti:8000 | xargs kill -9
+
+# Or use different port
+php artisan serve --port=8001
+```
+
 ---
 
 ## 📚 Key Documentation Files
@@ -453,6 +678,10 @@ php artisan cache:clear
 - **`docs/API_DOCUMENTATION.md`** - API endpoints documentation
 - **`docs/DEVELOPMENT_ROADMAP.md`** - Timeline & phases
 - **`docs/phase/phase-1-completion.md`** - Phase 1 report
+- **`docs/phase/phase-2-completion.md`** - Phase 2 report
+- **`docs/phase/phase-3-completion.md`** - Phase 3 report
+- **`docs/phase/phase-4-completion.md`** - Phase 4 report
+- **`scripts/start-app.sh`** - 🚀 One-command startup script
 
 ---
 
@@ -460,6 +689,7 @@ php artisan cache:clear
 
 **Project Owner:** [Your Name]  
 **Started:** 2025-01-31  
+**Phase 4 Complete:** 2025-11-01  
 **Target Launch:** TBD  
 
 ---
@@ -471,7 +701,7 @@ php artisan cache:clear
 ```
 Users: 5 dummy users
 Kategori: 8 categories (Jalan Rusak, Lampu Mati, etc.)
-Aduan: Test with tinker
+Aduan: Test with tinker or create via UI
 ```
 
 ### Status Values (Aduan)
@@ -482,8 +712,23 @@ Aduan: Test with tinker
 - `selesai` - Completed
 - `ditolak` - Rejected
 
+### Start Application
+
+```bash
+# Quick start (recommended)
+bash scripts/start-app.sh
+
+# Manual start
+service mariadb start
+cd /app
+php artisan serve
+```
+
+**Access:** http://localhost:8000  
+**Login:** 081234567890 / password123
+
 ---
 
 **Remember:** This is the single source of truth for RESPONTA project setup and conventions. Always refer to this file when starting a new conversation or onboarding new team members!
 
-**Last Updated:** 2025-01-31 | **Version:** 1.0.0
+**Last Updated:** 2025-11-01 | **Version:** 2.0.0
