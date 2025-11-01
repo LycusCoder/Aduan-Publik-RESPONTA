@@ -15,11 +15,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        $this->command->info('🌱 Starting RESPONTA Database Seeding...');
+        $this->command->newLine();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        // Seed kategori aduan first (master data)
+        $this->call(KategoriAduanSeeder::class);
+        $this->command->newLine();
+
+        // Seed users
+        $this->call(UserSeeder::class);
+        $this->command->newLine();
+
+        $this->command->info('✅ All seeders completed successfully!');
+        $this->command->info('🚀 RESPONTA is ready for development!');
     }
 }

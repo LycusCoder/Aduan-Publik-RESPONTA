@@ -1,59 +1,306 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
-
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+  <img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo">
 </p>
 
-## About Laravel
+<h1 align="center">RESPONTA</h1>
+<h3 align="center">Sistem Pelaporan & Penanganan Aduan Warga</h3>
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+<p align="center">
+  <img src="https://img.shields.io/badge/Laravel-12-FF2D20?style=for-the-badge&logo=laravel&logoColor=white" alt="Laravel 12">
+  <img src="https://img.shields.io/badge/PHP-8.2-777BB4?style=for-the-badge&logo=php&logoColor=white" alt="PHP 8.2">
+  <img src="https://img.shields.io/badge/MySQL-10.11-4479A1?style=for-the-badge&logo=mysql&logoColor=white" alt="MySQL">
+  <img src="https://img.shields.io/badge/Status-In%20Development-yellow?style=for-the-badge" alt="Status">
+</p>
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 📖 Tentang RESPONTA
 
-## Learning Laravel
+**RESPONTA** adalah platform digital untuk memudahkan warga dalam melaporkan dan memantau penanganan keluhan/aduan terkait infrastruktur kota seperti:
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+- 🛣️ Jalan rusak atau berlubang
+- 💡 Lampu jalan mati
+- 🗑️ Sampah menumpuk
+- 🚰 Drainase tersumbat
+- 🌳 Pohon tumbang
+- Dan lainnya...
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+**Fitur Utama:**
+- ✅ Pelaporan aduan dengan foto dan GPS location
+- ✅ Tracking status real-time (Baru → Diverifikasi → Diproses → Selesai)
+- ✅ Notifikasi update via SMS/Push notification
+- ✅ History aduan per user
+- ✅ Admin dashboard untuk verifikasi dan penanganan
 
-## Laravel Sponsors
+---
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## 🚀 Quick Start
 
-### Premium Partners
+### Prerequisites
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+- PHP 8.2 or higher
+- Composer 2.8+
+- MySQL/MariaDB 10.11+
+- Git
 
-## Contributing
+### Installation
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```bash
+# Clone repository
+git clone <repository-url>
+cd responta
 
-## Code of Conduct
+# Install dependencies
+composer install
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+# Copy environment file
+cp .env.example .env
 
-## Security Vulnerabilities
+# Generate app key
+php artisan key:generate
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+# Configure database in .env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=responta
+DB_USERNAME=root
+DB_PASSWORD=
 
-## License
+# Create database
+mysql -u root -e "CREATE DATABASE IF NOT EXISTS responta;"
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+# Run migrations & seeders
+php artisan migrate --seed
+
+# Start development server
+php artisan serve
+```
+
+**Server will run at:** `http://localhost:8000`
+
+---
+
+## 📂 Project Structure
+
+```
+responta/
+├── app/
+│   ├── Http/
+│   │   ├── Controllers/      # API Controllers
+│   │   └── Requests/         # Form Request Validations
+│   ├── Models/               # Eloquent Models
+│   │   ├── User.php
+│   │   ├── KategoriAduan.php
+│   │   ├── Aduan.php
+│   │   └── FotoAduan.php
+│   └── Services/             # Business Logic
+├── database/
+│   ├── migrations/           # Database Migrations
+│   └── seeders/              # Database Seeders
+├── routes/
+│   ├── api.php               # API Routes (Primary)
+│   └── web.php               # Web Routes
+├── docs/                     # Documentation
+│   ├── golden-rules.md       # Project Golden Rules ⭐
+│   ├── API_DOCUMENTATION.md
+│   ├── DATABASE_SCHEMA.md
+│   └── phase/                # Phase Completion Reports
+└── README.md                 # This file
+```
+
+---
+
+## 🗄️ Database Schema
+
+### Main Tables
+
+| Table | Description | Records |
+|-------|-------------|----------|
+| `users` | Warga/Citizens data | 5 (seeded) |
+| `kategori_aduan` | Complaint categories | 8 (seeded) |
+| `aduan` | Complaints/Reports | - |
+| `foto_aduan` | Complaint photos (max 3) | - |
+| `personal_access_tokens` | API authentication tokens | - |
+
+### Key Relationships
+
+```
+User (1) ----< (many) Aduan
+KategoriAduan (1) ----< (many) Aduan  
+Aduan (1) ----< (many) FotoAduan
+```
+
+**See full schema:** [`docs/DATABASE_SCHEMA.md`](docs/DATABASE_SCHEMA.md)
+
+---
+
+## 🔐 Authentication
+
+**System:** Laravel Sanctum (API Token Authentication)
+
+**Login Method:**
+- ❌ NO email-based login
+- ✅ Login using `no_hp` (phone number) + `password`
+- ✅ OTP verification for registration
+- ✅ NIK (ID number) encrypted in database
+
+**Test Credentials:**
+```
+No HP: 081234567890
+Password: password123
+```
+
+---
+
+## 🧪 Testing
+
+### Using Artisan Tinker
+
+```bash
+# Open Tinker REPL
+php artisan tinker
+
+# Test models
+>>> $user = App\Models\User::first();
+>>> echo $user->name;
+
+# Test relationships
+>>> $aduan = App\Models\Aduan::with('user', 'kategoriAduan')->first();
+>>> echo $aduan->user->name;
+
+# Test spatial query (nearby aduan)
+>>> $nearby = App\Models\Aduan::nearby(-6.2088, 106.8456, 5)->get();
+```
+
+### Fresh Database
+
+```bash
+# Drop all tables, re-migrate, and seed
+php artisan migrate:fresh --seed
+```
+
+---
+
+## 📋 Development Phases
+
+### ✅ Completed
+
+- [x] **Phase 0:** Documentation & Project Setup
+- [x] **Phase 1:** Database Migrations & Eloquent Models
+  - 5 migrations created
+  - 4 models with relationships
+  - Auto-generate nomor_tiket: `ADU-YYYYMMDD-XXX`
+  - Spatial queries for nearby aduan
+  - 2 seeders (Users & Kategori)
+
+### 🚧 In Progress
+
+- [ ] **Phase 2:** Authentication API (Register, Login, OTP)
+- [ ] **Phase 3:** Aduan CRUD API
+- [ ] **Phase 4:** File Upload & Image Processing
+- [ ] **Phase 5:** Admin Dashboard
+- [ ] **Phase 6:** Testing & Deployment
+
+**Progress:** 33% (2/6 phases completed)
+
+**See full roadmap:** [`docs/DEVELOPMENT_ROADMAP.md`](docs/DEVELOPMENT_ROADMAP.md)
+
+---
+
+## 🔧 Useful Commands
+
+```bash
+# Development
+php artisan serve              # Start dev server
+php artisan tinker             # Interactive REPL
+
+# Database
+php artisan migrate            # Run migrations
+php artisan migrate:fresh      # Fresh start (drop all tables)
+php artisan db:seed            # Run seeders
+
+# Cache
+php artisan config:clear       # Clear config cache
+php artisan cache:clear        # Clear app cache
+php artisan route:list         # Show all routes
+
+# Code Generation
+php artisan make:model Post -m          # Model + migration
+php artisan make:controller PostController --api
+php artisan make:request StorePostRequest
+```
+
+---
+
+## 📚 Documentation
+
+| File | Description |
+|------|-------------|
+| **[docs/golden-rules.md](docs/golden-rules.md)** | ⭐ **Project conventions & setup guide** |
+| [docs/DATABASE_SCHEMA.md](docs/DATABASE_SCHEMA.md) | Complete database schema |
+| [docs/API_DOCUMENTATION.md](docs/API_DOCUMENTATION.md) | API endpoints documentation |
+| [docs/DEVELOPMENT_ROADMAP.md](docs/DEVELOPMENT_ROADMAP.md) | Development timeline |
+| [docs/SETUP_GUIDE.md](docs/SETUP_GUIDE.md) | Detailed setup instructions |
+| [docs/phase/](docs/phase/) | Phase completion reports |
+
+---
+
+## 🛠️ Tech Stack
+
+**Backend:**
+- Laravel 12.0 (PHP 8.2+)
+- Laravel Sanctum (API Authentication)
+- Eloquent ORM
+- MariaDB 10.11 / MySQL 8.0+
+
+**Development Tools:**
+- Composer 2.8+
+- Artisan CLI
+- Tinker (REPL)
+
+**Future Frontend:**
+- React / Vue / Inertia.js (TBD)
+- Tailwind CSS
+- Mobile: React Native / Flutter (TBD)
+
+---
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit changes (`git commit -m 'Add AmazingFeature'`)
+4. Push to branch (`git push origin feature/AmazingFeature`)
+5. Open Pull Request
+
+**Please read [`docs/golden-rules.md`](docs/golden-rules.md) before contributing!**
+
+---
+
+## 📝 License
+
+This project is licensed under the MIT License.
+
+---
+
+## 👥 Team
+
+**Project Start:** 2025-01-31  
+**Status:** Active Development  
+**Current Phase:** Phase 2 (Authentication API)
+
+---
+
+## 📞 Support
+
+For questions or issues:
+1. Check [`docs/golden-rules.md`](docs/golden-rules.md)
+2. Read API documentation in [`docs/API_DOCUMENTATION.md`](docs/API_DOCUMENTATION.md)
+3. Review phase reports in [`docs/phase/`](docs/phase/)
+4. Open an issue on GitHub
+
+---
+
+<p align="center">Made with ❤️ for Better City Infrastructure</p>
+<p align="center">Powered by Laravel 12</p>
