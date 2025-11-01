@@ -14,6 +14,10 @@ import AdminAduanDetail from './pages/admin/AdminAduanDetail';
 import AdminUserList from './pages/admin/AdminUserList';
 import AdminUserForm from './pages/admin/AdminUserForm';
 import AdminUserDetail from './pages/admin/AdminUserDetail';
+import NotFound from './pages/errors/NotFound';
+import Forbidden from './pages/errors/Forbidden';
+import ServerError from './pages/errors/ServerError';
+import Maintenance from './pages/errors/Maintenance';
 import AppLayout from './components/layout/AppLayout';
 import GuestLayout from './components/layout/GuestLayout';
 import AdminLayout from './components/admin/AdminLayout';
@@ -213,10 +217,23 @@ function App() {
                         </AdminProtectedRoute>
                     } />
 
+                    {/* Admin Error Routes */}
+                    <Route path="/admin/403" element={<Forbidden />} />
+                    <Route path="/admin/500" element={<ServerError />} />
+                    <Route path="/admin/*" element={<NotFound />} />
+
                     {/* Admin Redirect */}
                     <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
                 </Routes>
             </AdminAuthProvider>
+
+            {/* Global Error Routes (outside providers) */}
+            <Routes>
+                <Route path="/403" element={<Forbidden />} />
+                <Route path="/500" element={<ServerError />} />
+                <Route path="/maintenance" element={<Maintenance />} />
+                <Route path="*" element={<NotFound />} />
+            </Routes>
         </>
     );
 }
