@@ -12,6 +12,8 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminAduanList from './pages/admin/AdminAduanList';
 import AdminAduanDetail from './pages/admin/AdminAduanDetail';
 import AdminUserList from './pages/admin/AdminUserList';
+import AdminUserForm from './pages/admin/AdminUserForm';
+import AdminUserDetail from './pages/admin/AdminUserDetail';
 import AppLayout from './components/layout/AppLayout';
 import GuestLayout from './components/layout/GuestLayout';
 import AdminLayout from './components/admin/AdminLayout';
@@ -186,6 +188,27 @@ function App() {
                         <AdminProtectedRoute>
                             <AdminLayout>
                                 <AdminUserList />
+                            </AdminLayout>
+                        </AdminProtectedRoute>
+                    } />
+                    <Route path="/admin/users/create" element={
+                        <AdminProtectedRoute>
+                            <AdminLayout>
+                                <AdminUserForm />
+                            </AdminLayout>
+                        </AdminProtectedRoute>
+                    } />
+                    <Route path="/admin/users/:id" element={
+                        <AdminProtectedRoute>
+                            <AdminLayout>
+                                <AdminUserDetail />
+                            </AdminLayout>
+                        </AdminProtectedRoute>
+                    } />
+                    <Route path="/admin/users/:id/edit" element={
+                        <AdminProtectedRoute>
+                            <AdminLayout>
+                                <AdminUserForm />
                             </AdminLayout>
                         </AdminProtectedRoute>
                     } />
