@@ -209,7 +209,7 @@ php artisan migrate:fresh --seed
   - Spatial queries for nearby aduan
   - 2 seeders (Users & Kategori)
 
-- [x] **Phase 2:** Authentication API ✅ **NEW!**
+- [x] **Phase 2:** Authentication API
   - Register with OTP verification (toggle on/off)
   - Login via no_hp + password
   - Email OTP system with beautiful template
@@ -217,11 +217,18 @@ php artisan migrate:fresh --seed
   - 7 API endpoints ready
   - Sanctum token authentication
 
+- [x] **Phase 3:** Aduan CRUD API ✅ **NEW!**
+  - Complete CRUD operations (Create, Read, Update, Delete)
+  - Image upload with auto-compress (max 1MB) + thumbnails (300x300)
+  - Filter by status & kategori
+  - Authorization policies (only owner can edit/delete)
+  - 6 API endpoints ready
+  - Intervention Image integration
+
 ### 🚧 In Progress
 
-- [ ] **Phase 3:** Aduan CRUD API
-- [ ] **Phase 4:** File Upload & Image Processing
-- [ ] **Phase 5:** Admin Dashboard
+- [ ] **Phase 4:** Frontend Implementation
+- [ ] **Phase 5:** Admin Dashboard  
 - [ ] **Phase 6:** Testing & Deployment
 
 **Progress:** 50% (3/6 phases completed)
