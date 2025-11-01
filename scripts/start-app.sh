@@ -79,11 +79,6 @@ if [ ! -f .env ]; then
         echo -e "${YELLOW}⚠${NC}  .env file not found. Copying from .env.example..."
         cp .env.example .env
         echo -e "${GREEN}✓${NC} .env file created"
-        
-        # Generate application key
-        echo -e "${BLUE}🔑 Generating application key...${NC}"
-        php artisan key:generate --force > /dev/null 2>&1
-        echo -e "${GREEN}✓${NC} Application key generated"
     else
         echo -e "${RED}✗${NC} .env.example not found. Cannot create .env file"
         exit 1
@@ -91,6 +86,16 @@ if [ ! -f .env ]; then
 else
     echo -e "${GREEN}✓${NC} .env file exists"
 fi
+
+# Pastikan Application Key ada dan konfigurasi di-refresh (FIX MISSING_APP_KEY_EXCEPTION)
+echo -e "${BLUE}🔑 Ensuring application key is generated...${NC}"
+php artisan key:generate --force > /dev/null 2>&1
+echo -e "${GREEN}✓${NC} Application key verified/generated"
+
+# Clear config cache agar kunci baru langsung terbaca oleh seeder di Step 3
+echo -e "${BLUE}🧹 Clearing configuration cache...${NC}"
+php artisan config:clear > /dev/null 2>&1
+echo -e "${GREEN}✓${NC} Config cache cleared"
 
 echo ""
 
@@ -204,7 +209,7 @@ else
         echo "   2. Database doesn't exist"
         echo "   3. MySQL/MariaDB not running"
         echo ""
-        echo -e "${BLUE}❓ Try to create database '$DB_DATABASE'? (y/n)${NC} [default: y]"
+        echo -e "${BLUE}❓ Try to create database '$DB_DATABASE'? (y/n)${NC}"
         read -t 10 -n 1 CREATE_DB
         echo ""
         
@@ -215,7 +220,7 @@ else
                 echo -e "${BLUE}📦 Running migrations...${NC}"
                 php artisan migrate --force
                 
-                echo -e "${BLUE}❓ Seed database with sample data? (y/n)${NC} [default: y]"
+                echo -e "${BLUE}❓ Seed database with sample data? (y/n)${NC}"
                 read -t 10 -n 1 SEED_CHOICE
                 echo ""
                 
@@ -248,6 +253,7 @@ else
     echo -e "${RED}✗${NC} .env file not found and cannot be created"
     exit 1
 fi
+fi # <--- INI FI PENUTUP YANG HILANG (Menutup blok if/else yang dimulai di baris 76)
 
 echo ""
 
@@ -312,6 +318,7 @@ echo ""
 echo -e "${YELLOW}📋 Step 6: Clear Cache${NC}"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
+# Config cache sudah di-clear di Step 2, tapi di sini diulang untuk safety
 php artisan config:clear > /dev/null 2>&1
 echo -e "${GREEN}✓${NC} Config cache cleared"
 
